@@ -53,9 +53,9 @@ func (i *RssPlugin) GetBytes(job *dao.Rss) ([]byte, error) {
 	return data, err
 } //拉取数据
 
-func (i *RssPlugin) Files(data []byte) ([]dao.RssFile, error) {
+func (i *RssPlugin) Files(data []byte) ([]dao.File, error) {
 	var rss net.Rss
-	var files []dao.RssFile
+	var files []dao.File
 	reader := bytes.NewReader(data)
 	decoder := xml.NewDecoder(reader)
 	err := decoder.Decode(&rss)
@@ -68,8 +68,8 @@ func (i *RssPlugin) Files(data []byte) ([]dao.RssFile, error) {
 	return files, err
 } //获取资源Url
 
-func parse(i net.Item) dao.RssFile {
-	return dao.RssFile{
+func parse(i net.Item) dao.File {
+	return dao.File{
 		Guid:        i.Guid,
 		IsPermaLink: i.IsPermaLink,
 		Link:        i.Link,

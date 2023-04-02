@@ -11,5 +11,5 @@ var Conn *gorm.DB
 func init() {
 	Conn, _ = gorm.Open(sqlite.Open(aria2.DefaultServer.DataPath), &gorm.Config{})
 	_ = Conn.AutoMigrate(&Rss{})
-	_ = Conn.AutoMigrate(&RssFile{})
+	_ = Conn.AutoMigrate(&File{})
 }

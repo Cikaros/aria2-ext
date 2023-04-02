@@ -19,7 +19,7 @@ type IPlugin interface {
 
 	GetBytes(*dao.Rss) ([]byte, error) //获取数据
 
-	Files([]byte) ([]dao.RssFile, error) //获取资源Url
+	Files([]byte) ([]dao.File, error) //获取资源Url
 
 }
 
