@@ -9,7 +9,7 @@ import (
 var pluginPath = os.Getenv("ARIA2_PLUGINS")
 var Plugins map[string]IPlugin
 
-func init() {
+func Init() {
 	dirs, err := os.ReadDir(pluginPath)
 	if err != nil {
 		log.Printf("Plug-in directory read failed, plug-in loading from %s ignored...\n", pluginPath)

@@ -3,6 +3,7 @@ package main
 import (
 	"aria2-ext/dao"
 	"aria2-ext/job"
+	plug "aria2-ext/plugin"
 	"github.com/robfig/cron"
 	"os"
 	"os/signal"
@@ -10,6 +11,7 @@ import (
 )
 
 func main() {
+	plug.Init()
 	var timer = cron.New() //定时器
 	var rsses []dao.Rss
 	dao.Conn.Find(&rsses) //加载订阅任务
