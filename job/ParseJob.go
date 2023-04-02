@@ -20,13 +20,13 @@ func (job *Parse) Run() {
 	log.Printf("Running RssJob[%s] %s...\n", job.Title, job.Link)
 	iPlugin := plugin.Plugins[job.CustomPlugin]
 	if iPlugin == nil {
-
+		log.Printf("Plugin %s does not exist, skip RssJob[%s]...\n", job.CustomPlugin, job.Title)
+		return
 	}
-	bytes, err := iPlugin.GetBytes(&job.Rss)
-	if err == nil {
-		var files []dao.File
-		files, err = iPlugin.Files(bytes)
-		if err == nil {
+	data, _ := iPlugin.GetBytes(&job.Rss)
+	if len(data) > 0 {
+		files, err := iPlugin.Files(data)
+		if len(files) > 0 {
 			for _, file := range files {
 				if matched, _ := regexp.MatchString(job.Limit, file.Title); matched {
 					var tmp dao.Rss
@@ -42,10 +42,8 @@ func (job *Parse) Run() {
 			wg.Wait() //goroutine 全部执行完成
 			log.Printf("Running RssJob[%s] is Ok!\n", job.Title)
 		} else {
-			log.Printf("Failed to add RssJob[%s]. Procedure: %v\n", job.Title, err)
+			log.Printf("Failed to parsing RssJob[%s]. Procedure: %v\n", job.Title, err)
 		}
-	} else {
-		log.Printf("Plugin %s does not exist, skip RssJob[%s]...\n", job.CustomPlugin, job.Title)
 	}
 }
 
