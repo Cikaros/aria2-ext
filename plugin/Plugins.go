@@ -17,12 +17,11 @@ func init() {
 	}
 	for _, file := range dirs {
 		if !file.IsDir() {
-			log.Printf(pluginPath + file.Name())
 			p, err := plugin.Open(pluginPath + file.Name())
 			if err != nil {
 				log.Printf("Unable to open %s, load has been skipped...\n", file.Name())
 			}
-			cal, err := p.Lookup("instance")
+			cal, err := p.Lookup("Instance")
 			if err != nil {
 				log.Printf("Plugin %s format is incorrect, load has been skipped...\n", file.Name())
 			}
