@@ -15,7 +15,7 @@ type RssPlugin struct {
 	plug.Plugin
 }
 
-func instance() *RssPlugin {
+func Instance() *RssPlugin {
 	return &RssPlugin{
 		Plugin: plug.Plugin{
 			ID:          "rss-plugin",
