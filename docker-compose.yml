@@ -43,6 +43,7 @@ services:
       ARIA2_HOST: 192.168.198.129
       ARIA2_SECRET: P3TERX
       ARIA2_PORT: 6800
+      ARIA2_PLUGINS: /plug-in
       ARIA2_PATH: /downloads
       ARIA2_DB: /config/data.db
     volumes:

@@ -8,7 +8,10 @@ Aria2是一款自由、跨平台命令行界面的下载管理器，该软件根
 
 ## 功能介绍
 
-- Rss种子订阅
+- Plugins
+- Subscribe
+    - Rss订阅
+    - Custom订阅
 
 ## 数据库介绍
 
@@ -71,10 +74,10 @@ Aria2是一款自由、跨平台命令行界面的下载管理器，该软件根
 以上述RSS为例，添加Rss订阅：
 
 ```sqlite
-INSERT INTO rsses (title, link, description, `limit`, cron, path)
+INSERT INTO rsses (title, link, description, `limit`, cron, path, custom_plugin)
 VALUES ("Mikan Project - 名侦探柯南", "https://mikanani.me/RSS/Bangumi?bangumiId=227&subgroupid=562",
         "Mikan Project - 名侦探柯南", "B-Global 1920x1080 HEVC AAC MKV", "0 0 9 * * 6 2023-2025",
-        "/downloads/名侦探柯南");
+        "/downloads/名侦探柯南","org.cikaros.plugin:rss-plugin");
 ```
 
 ## 附录

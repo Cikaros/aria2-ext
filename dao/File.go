@@ -2,7 +2,6 @@ package dao
 
 import (
 	"aria2-ext/aria2"
-	"aria2-ext/net"
 	"github.com/oliverpool/argo"
 	"gorm.io/gorm"
 	"io"
@@ -109,19 +108,4 @@ func (file *RssFile) worker(job *Rss, wg *sync.WaitGroup) {
 		file.AriaId = gids.ID
 	}
 	Conn.Update("aria_id", file)
-}
-
-func (file *RssFile) ParseRssFile(i net.Item, rss *Rss) {
-	file.Reference = rss.ID
-	file.Guid = i.Guid
-	file.IsPermaLink = i.IsPermaLink
-	file.Link = i.Link
-	file.Title = i.Title
-	file.Description = i.Description
-	file.Torrent.Link = i.Torrent.Link
-	file.Torrent.ContentLength = i.Torrent.ContentLength
-	file.Torrent.PubDate = i.Torrent.PubDate
-	file.Enclosure.Type = i.Enclosure.Type
-	file.Enclosure.Length = i.Enclosure.Length
-	file.Enclosure.Url = i.Enclosure.Url
 }
