@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  Aria2-Pro:
+    container_name: aria2-pro
+    image: p3terx/aria2-pro:latest
+    environment:
+      - ALL_PROXY=http://192.168.198.1:7890
+      - PUID=65534
+      - PGID=65534
+      - UMASK_SET=022
+      - RPC_SECRET=P3TERX
+      - RPC_PORT=6800
+      - LISTEN_PORT=6888
+      - DISK_CACHE=64M
+      - IPV6_MODE=false
+      - UPDATE_TRACKERS=true
+      - CUSTOM_TRACKER_URL=https://raw.githubusercontent.com/DeSireFire/animeTrackerList/master/AT_all.txt
+      - TZ=Asia/Shanghai
+    volumes:
+      - vo-aria2:/config
+      - /tmp/aria2:/downloads
+    ports:
+      - '6800:6800'
+      - '6888:6888'
+      - '6888:6888/udp'
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+  Aria2-Ext:
+    container_name: aria2-ext
+    build:
+      dockerfile: ./Dockerfile
+    image: cikaros/aria2-ext:latest
+    depends_on:
+      - Aria2-Pro
+    environment:
+      LANG: C.UTF-8
+      TZ: Asia/Shanghai
+      ARIA2_PROTOCOL: http
+      ARIA2_HOST: 192.168.198.129
+      ARIA2_SECRET: P3TERX
+      ARIA2_PORT: 6800
+      ARIA2_PATH: /downloads
+      ARIA2_DB: /config/data.db
+    volumes:
+      - /mnt/hgfs/e/Temp/go/src/aria2-ext/aria2-ext.db:/config/data.db
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+volumes:
+  vo-aria2:
