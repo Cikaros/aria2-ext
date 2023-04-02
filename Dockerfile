@@ -21,7 +21,7 @@ ENV ARIA2_PROTOCOL=http \
     ARIA2_SECRET=P3TERX \
     ARIA2_PORT=6800 \
     ARIA2_PATH=/downloads \
-    ARIA2_PLUGINS=/plugins \
+    ARIA2_PLUGINS=/plugins/ \
     ARIA2_DB=/config/data.db
 # 拷贝编译好的二进制文件
 COPY --from=builder /go/src/aria2-ext/aria2-ext /usr/local/bin/aria2-ext

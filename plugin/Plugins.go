@@ -17,7 +17,7 @@ func init() {
 	}
 	for _, file := range dirs {
 		if !file.IsDir() {
-			p, err := plugin.Open(pluginPath + "/" + file.Name())
+			p, err := plugin.Open(pluginPath + file.Name())
 			if err != nil {
 				log.Printf("Unable to open %s, load has been skipped...\n", file.Name())
 			}
@@ -28,7 +28,7 @@ func init() {
 			iPlug := cal.(func() IPlugin)()
 			info := iPlug.Info()
 			Plugins[info.UID()] = iPlug
-			log.Printf("Plug-in %s detected, successfully loaded...\n", info.UID())
+			log.Printf("Plug-in %s detected, successfully loaded.\n", info.UID())
 		}
 	}
 }
