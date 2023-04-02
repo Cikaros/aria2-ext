@@ -7,7 +7,7 @@ import (
 )
 
 var pluginPath = os.Getenv("ARIA2_PLUGINS")
-var Plugins map[string]IPlugin
+var Plugins = map[string]IPlugin{}
 
 func Init() {
 	dirs, err := os.ReadDir(pluginPath)
