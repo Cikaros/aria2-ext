@@ -1,4 +1,4 @@
-package plug_in
+package main
 
 import (
 	"aria2-ext/dao"
