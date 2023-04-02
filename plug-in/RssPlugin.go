@@ -45,7 +45,7 @@ func (i *RssPlugin) GetBytes(job *dao.Rss) ([]byte, error) {
 		if err != nil {
 		}
 	}(resp.Body)
-	_, err = resp.Body.Read(data)
+	data, err = io.ReadAll(resp.Body)
 	if err != nil {
 		log.Printf("Failed to request RssJob data. Procedure: %v\n", err)
 		return data, err
