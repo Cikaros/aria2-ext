@@ -31,9 +31,7 @@ services:
         max-size: 5m
   Aria2-Ext:
     container_name: aria2-ext
-    build:
-      dockerfile: ./Dockerfile
-    image: cikaros/aria2-ext:latest
+    image: cikaros/aria2-ext:v0.2.x
     depends_on:
       - Aria2-Pro
     environment:
@@ -43,11 +41,12 @@ services:
       ARIA2_HOST: 192.168.198.129
       ARIA2_SECRET: P3TERX
       ARIA2_PORT: 6800
-      ARIA2_PLUGINS: /plug-in
+      ARIA2_PLUGINS: /plugins
       ARIA2_PATH: /downloads
       ARIA2_DB: /config/data.db
+    restart: unless-stopped
     volumes:
-      - /mnt/hgfs/e/Temp/go/src/aria2-ext/aria2-ext.db:/config/data.db
+      - ./aria2-ext.db:/config/data.db
     logging:
       driver: json-file
       options:
