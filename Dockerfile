@@ -12,7 +12,7 @@ ENV GO111MODULE=on
 ENV GOPROXY="https://goproxy.io"
 # 编译程序
 RUN go build -o aria2-ext . && \
-    go build -o plugin-rss.so -buildmode=plugin ./plugin/RssPlugin.go
+    go build -o plugin-rss.so -buildmode=plugin ./plugin/default/RssPlugin.go
 
 # 第二个阶段：运行程序
 FROM alpine:latest
