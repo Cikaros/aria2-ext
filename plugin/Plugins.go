@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const defaultPath = "/defaultPlugins"
+const defaultPath = "/default-plugins"
 
 var pluginPath = os.Getenv("ARIA2_PLUGINS")
 var skipBanner = strings.ToLower(os.Getenv("ARIA2_SKIP_BANNER")) == "true"

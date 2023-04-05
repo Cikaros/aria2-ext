@@ -27,5 +27,5 @@ ENV ARIA2_PROTOCOL=http \
     ARIA2_DB=/config/data.db
 # 拷贝编译好的二进制文件
 COPY --from=builder /go/src/aria2-ext/aria2-ext /usr/local/bin/aria2-ext
-COPY --from=builder /go/src/aria2-ext/plugin-*.so /defaultPlugins
+COPY --from=builder /go/src/aria2-ext/plugin-*.so /default-plugins
 CMD ["/usr/local/bin/aria2-ext"]
