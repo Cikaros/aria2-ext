@@ -45,7 +45,6 @@ func banner(jobs []dao.Rss) {
 	for _, rss := range jobs {
 		rss.Info()
 	}
-	fmt.Println("----------------------------------------------------------------")
 }
 
 func main() {
@@ -59,13 +58,16 @@ func main() {
 		parse.Load(timer)
 	}
 	job.Init()
+	defer job.Destroy()
 	timer.Start()
+	defer timer.Stop()
 	if startup {
-		timer.Run()
+		for _, entry := range timer.Entries() {
+			entry.Job.Run()
+		}
 	}
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
-	timer.Stop()
-	job.Destroy()
+
 }

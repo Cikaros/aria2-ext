@@ -31,12 +31,12 @@ func loadPlugins(pluginPath string) {
 				log.Printf("Unable to open %s, load has been skipped... Procedure: %v\n", file.Name(), err)
 				return
 			}
-			cal, err := p.Lookup("Instance")
+			instance, err := p.Lookup("Instance")
 			if err != nil {
 				log.Printf("Plugin %s format is incorrect, load has been skipped... Procedure: %v\n", file.Name(), err)
 				return
 			}
-			iPlug := cal.(func() IPlugin)()
+			iPlug := instance.(func() IPlugin)()
 			info := iPlug.Info()
 			if !skipBanner {
 				info.Banner()
