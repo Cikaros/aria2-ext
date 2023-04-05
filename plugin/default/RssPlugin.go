@@ -1,8 +1,9 @@
-package plugin
+package main
 
 import (
 	"aria2-ext/dao"
 	"aria2-ext/net"
+	"aria2-ext/plugin"
 	"bytes"
 	"encoding/xml"
 	"io"
@@ -11,12 +12,12 @@ import (
 )
 
 type RssPlugin struct {
-	Plugin
+	plugin.Plugin
 }
 
-func Instance() IPlugin {
+func Instance() plugin.IPlugin {
 	return &RssPlugin{
-		Plugin: Plugin{
+		Plugin: plugin.Plugin{
 			ID:          "plugin-rss",
 			Package:     "org.cikaros.plugin",
 			Version:     "v1.0.0",
@@ -28,7 +29,7 @@ func Instance() IPlugin {
 	}
 }
 
-func (i *RssPlugin) Info() Plugin {
+func (i *RssPlugin) Info() plugin.Plugin {
 	return i.Plugin
 } //获取插件详情
 
