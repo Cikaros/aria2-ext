@@ -21,18 +21,20 @@ func Init() {
 func loadPlugins(pluginPath string) {
 	dirs, err := os.ReadDir(pluginPath)
 	if err != nil {
-		log.Printf("Plug-in directory read failed, plug-in loading from %s ignored...\n", pluginPath)
+		log.Printf("Plug-in directory read failed, plug-in loading from %s ignored... Procedure: %v\n", pluginPath, err)
 		return
 	}
 	for _, file := range dirs {
 		if !file.IsDir() {
 			p, err := plugin.Open(pluginPath + file.Name())
 			if err != nil {
-				log.Printf("Unable to open %s, load has been skipped...\n", file.Name())
+				log.Printf("Unable to open %s, load has been skipped... Procedure: %v\n", file.Name(), err)
+				return
 			}
 			cal, err := p.Lookup("Instance")
 			if err != nil {
-				log.Printf("Plugin %s format is incorrect, load has been skipped...\n", file.Name())
+				log.Printf("Plugin %s format is incorrect, load has been skipped... Procedure: %v\n", file.Name(), err)
+				return
 			}
 			iPlug := cal.(func() IPlugin)()
 			info := iPlug.Info()
