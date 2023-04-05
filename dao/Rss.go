@@ -1,8 +1,8 @@
 package dao
 
 import (
+	"fmt"
 	"gorm.io/gorm"
-	"log"
 )
 
 type Rss struct {
@@ -20,5 +20,5 @@ type Rss struct {
 }
 
 func (rss *Rss) Info() {
-	log.Printf("%s\t%s\t%s\t%s\t%s\t%s\t%v", rss.Title, rss.Link, rss.CustomPlugin, rss.Limit, rss.Cron, rss.Path, rss.Enable)
+	fmt.Printf("%s\t%s\t%s\t%s\t%s\t%s\t%v", rss.Title, rss.Link, rss.CustomPlugin, rss.Limit, rss.Cron, rss.Path, rss.Enable)
 }

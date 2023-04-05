@@ -51,11 +51,11 @@ func banner(jobs []dao.Rss) {
 }
 
 func main() {
-	plug.Init()
 	var timer = cron.New() //定时器
 	var rsses []dao.Rss
 	dao.Conn.Find(&rsses) //加载订阅任务
 	banner(rsses)
+	plug.Init()
 	for _, rss := range rsses {
 		parse := job.Parse{Rss: rss}
 		parse.Load(timer)
