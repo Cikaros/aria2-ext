@@ -29,11 +29,11 @@ func (job *Parse) Run() {
 		if len(files) > 0 {
 			for _, file := range files {
 				if matched, _ := regexp.MatchString(job.Limit, file.Title); matched {
-					var tmp dao.Rss
+					var tmp dao.File
 					if result := dao.Conn.Where(&dao.File{Reference: job.ID, Guid: file.Guid}).First(&tmp); result.Error != nil {
 						//数据不存在
 						file.Reference = job.ID
-						dao.Conn.Create(&tmp) //创建数据
+						dao.Conn.Create(&file) //创建数据
 						wg.Add(1)
 						go worker(job, &file, &wg) //创建一个 goroutine 执行任务下载
 					}
