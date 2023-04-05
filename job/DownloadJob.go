@@ -9,7 +9,19 @@ import (
 	"sync"
 )
 
-var client = aria2.DefaultServer.NewClient()
+var client argo.Client
+
+func Init() {
+	client = aria2.DefaultServer.NewClient()
+}
+
+func Destroy() {
+	defer func(client argo.Client) {
+		err := client.Close()
+		if err != nil {
+		}
+	}(client)
+}
 
 func worker(job *Parse, file *dao.File, wg *sync.WaitGroup) {
 	defer wg.Done()

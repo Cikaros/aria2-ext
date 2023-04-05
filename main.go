@@ -60,6 +60,7 @@ func main() {
 		parse := job.Parse{Rss: rss}
 		parse.Load(timer)
 	}
+	job.Init()
 	timer.Start()
 	if startup {
 		timer.Run()
@@ -68,4 +69,5 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	timer.Stop()
+	job.Destroy()
 }
