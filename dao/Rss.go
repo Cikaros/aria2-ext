@@ -20,5 +20,12 @@ type Rss struct {
 }
 
 func (rss *Rss) Info() {
-	fmt.Printf("%s\t%s\t%s\t%s\t%s\t%s\t%v", rss.Title, rss.Link, rss.CustomPlugin, rss.Limit, rss.Cron, rss.Path, rss.Enable)
+	fmt.Println("----------------------------------------------------------------")
+	fmt.Printf("Title: %s\n", rss.Title)
+	fmt.Printf("Link: %s\n", rss.Link)
+	fmt.Printf("CustomPlugin: %s\n", rss.CustomPlugin)
+	fmt.Printf("Limit: %s\n", rss.Limit)
+	fmt.Printf("Cron: %s\n", rss.Cron)
+	fmt.Printf("Path: %s\n", rss.Path)
+	fmt.Printf("Enable: %v\n", rss.Enable)
 }

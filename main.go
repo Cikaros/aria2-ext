@@ -42,8 +42,6 @@ var startup = strings.ToLower(os.Getenv("ARIA2_STARTUP")) == "true"
 
 func banner(jobs []dao.Rss) {
 	fmt.Printf(Banner, Git, Author, Blog, Version, BuildTime)
-	fmt.Println("----------------------------------------------------------------")
-	fmt.Println("Title\tLink\tCustomPlugin\tLimit\tCron\tPath\tEnable")
 	for _, rss := range jobs {
 		rss.Info()
 	}
