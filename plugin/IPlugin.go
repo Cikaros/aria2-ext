@@ -2,7 +2,7 @@ package plugin
 
 import (
 	"aria2-ext/dao"
-	"log"
+	"fmt"
 )
 
 const banner = `
@@ -38,5 +38,5 @@ func (plugin *Plugin) UID() string {
 }
 
 func (plugin *Plugin) Banner() {
-	log.Printf(banner, plugin.UID(), plugin.Description, plugin.Version, plugin.Author, plugin.Blog)
+	fmt.Printf(banner, plugin.UID(), plugin.Description, plugin.Version, plugin.Author, plugin.Blog)
 }
