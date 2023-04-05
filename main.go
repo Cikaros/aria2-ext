@@ -40,16 +40,22 @@ Version: %s | Build Time: %s
 
 var startup = strings.ToLower(os.Getenv("ARIA2_STARTUP")) == "true"
 
-func Init() {
+func banner(jobs []dao.Rss) {
 	fmt.Printf(Banner, Git, Author, Blog, Version, BuildTime)
+	fmt.Println("----------------------------------------------------------------")
+	fmt.Println("Title\tLink\tCustomPlugin\tLimit\tCron\tPath\tEnable")
+	for _, rss := range jobs {
+		rss.Info()
+	}
+	fmt.Println("----------------------------------------------------------------")
 }
 
 func main() {
-	Init()
 	plug.Init()
 	var timer = cron.New() //定时器
 	var rsses []dao.Rss
 	dao.Conn.Find(&rsses) //加载订阅任务
+	banner(rsses)
 	for _, rss := range rsses {
 		parse := job.Parse{Rss: rss}
 		parse.Load(timer)

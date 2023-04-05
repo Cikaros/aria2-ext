@@ -2,6 +2,7 @@ package dao
 
 import (
 	"gorm.io/gorm"
+	"log"
 )
 
 type Rss struct {
@@ -16,4 +17,8 @@ type Rss struct {
 	Path         string `gorm:"default:'/download'"`                     //存放路径
 	Enable       bool   `gorm:"default:true"`                            //是否启用
 	Count        int    `gorm:"default:0"`                               //计数文件
+}
+
+func (rss *Rss) Info() {
+	log.Printf("%s\t%s\t%s\t%s\t%s\t%s\t%v", rss.Title, rss.Link, rss.CustomPlugin, rss.Limit, rss.Cron, rss.Path, rss.Enable)
 }
