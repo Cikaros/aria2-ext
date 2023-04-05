@@ -31,7 +31,9 @@ services:
         max-size: 5m
   Aria2-Ext:
     container_name: aria2-ext
-    image: cikaros/aria2-ext:v0.2.x
+    build:
+      dockerfile: ./Dockerfile
+    image: cikaros/aria2-ext:v0.3.x
     depends_on:
       - Aria2-Pro
     environment:
