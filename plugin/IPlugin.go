@@ -2,7 +2,17 @@ package plugin
 
 import (
 	"aria2-ext/dao"
+	"log"
 )
+
+const banner = `
+----------------------------------------------------------------
+Plugin: %s
+Description: %s
+Version: %s
+Copyright (c) %s 2023-2024 <%s>
+----------------------------------------------------------------
+`
 
 type Plugin struct {
 	ID          string //插件ID demo
@@ -25,4 +35,8 @@ type IPlugin interface {
 
 func (plugin *Plugin) UID() string {
 	return plugin.Package + ":" + plugin.ID
+}
+
+func (plugin *Plugin) Banner() {
+	log.Printf(banner, plugin.UID(), plugin.Description, plugin.Version, plugin.Author, plugin.Blog)
 }

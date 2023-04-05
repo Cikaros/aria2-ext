@@ -44,6 +44,8 @@ services:
       ARIA2_PLUGINS: /plugins
       ARIA2_PATH: /downloads
       ARIA2_DB: /config/data.db
+      ARIA2_STARTUP: false
+      ARIA2_SKIP_BANNER: false
     restart: unless-stopped
     volumes:
       - ./aria2-ext.db:/config/data.db

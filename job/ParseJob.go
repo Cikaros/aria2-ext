@@ -48,6 +48,10 @@ func (job *Parse) Run() {
 }
 
 func (job *Parse) Load(cron *cron.Cron) {
+	if !job.Enable {
+		log.Printf("RssJob [%s] is not enabled, skip RssJob...\n", job.Title)
+		return
+	}
 	if err := cron.AddJob(job.Cron, job); err != nil {
 		log.Printf("Failed to add RssJob[%s]. Procedure: %v\n", job.Title, err)
 	}

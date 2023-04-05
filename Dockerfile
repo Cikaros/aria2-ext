@@ -12,7 +12,7 @@ ENV GO111MODULE=on
 ENV GOPROXY="https://goproxy.io"
 # 编译程序
 RUN go build -o aria2-ext . && \
-    go build -o plugin-rss.so -buildmode=plugin ./plug-in/RssPlugin.go
+    go build -o plugin-rss.so -buildmode=plugin ./plugin/RssPlugin.go
 
 # 第二个阶段：运行程序
 FROM alpine:latest
@@ -22,8 +22,10 @@ ENV ARIA2_PROTOCOL=http \
     ARIA2_PORT=6800 \
     ARIA2_PATH=/downloads \
     ARIA2_PLUGINS=/plugins/ \
+    ARIA2_SKIP_BANNER=false \
+    ARIA2_STARTUP=false \
     ARIA2_DB=/config/data.db
 # 拷贝编译好的二进制文件
 COPY --from=builder /go/src/aria2-ext/aria2-ext /usr/local/bin/aria2-ext
-COPY --from=builder /go/src/aria2-ext/plugin-*.so $ARIA2_PLUGINS
+COPY --from=builder /go/src/aria2-ext/plugin-*.so /defaultPlugins
 CMD ["/usr/local/bin/aria2-ext"]

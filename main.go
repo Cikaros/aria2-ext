@@ -8,6 +8,7 @@ import (
 	"github.com/robfig/cron"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 )
 
@@ -15,7 +16,7 @@ const (
 	Git       = "https://gitee.com/Cikaros/aria2-ext"
 	Author    = "Cikaros"
 	Blog      = "https://cikaros.gitee.io"
-	Version   = "v0.2.0"
+	Version   = "v0.3.0"
 	BuildTime = "2023/04/03 12:00"
 )
 
@@ -37,6 +38,8 @@ Version: %s | Build Time: %s
 ----------------------------------------------------------------
 `
 
+var startup = strings.ToLower(os.Getenv("ARIA2_STARTUP")) == "true"
+
 func Init() {
 	fmt.Printf(Banner, Git, Author, Blog, Version, BuildTime)
 }
@@ -52,6 +55,9 @@ func main() {
 		parse.Load(timer)
 	}
 	timer.Start()
+	if startup {
+		timer.Run()
+	}
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit

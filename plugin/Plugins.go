@@ -4,12 +4,21 @@ import (
 	"log"
 	"os"
 	"plugin"
+	"strings"
 )
 
+const defaultPath = "/defaultPlugins"
+
 var pluginPath = os.Getenv("ARIA2_PLUGINS")
+var skipBanner = strings.ToLower(os.Getenv("ARIA2_SKIP_BANNER")) == "true"
 var Plugins = map[string]IPlugin{}
 
 func Init() {
+	loadPlugins(pluginPath)
+	loadPlugins(defaultPath)
+}
+
+func loadPlugins(pluginPath string) {
 	dirs, err := os.ReadDir(pluginPath)
 	if err != nil {
 		log.Printf("Plug-in directory read failed, plug-in loading from %s ignored...\n", pluginPath)
@@ -27,6 +36,9 @@ func Init() {
 			}
 			iPlug := cal.(func() IPlugin)()
 			info := iPlug.Info()
+			if !skipBanner {
+				info.Banner()
+			}
 			Plugins[info.UID()] = iPlug
 			log.Printf("Plug-in %s detected, successfully loaded.\n", info.UID())
 		}
