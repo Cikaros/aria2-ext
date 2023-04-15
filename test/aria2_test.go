@@ -6,19 +6,16 @@ import (
 	plug "aria2-ext/plugin"
 	"bytes"
 	"encoding/xml"
-	"github.com/oliverpool/argo"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"testing"
 )
 
 func TestAriaOption(t *testing.T) {
-	option := argo.Option{
-		"dir": "/download",
-	}
-	println(option)
+	println(runtime.GOOS)
 }
 
 func TestFiles(t *testing.T) {
@@ -123,4 +120,5 @@ func TestRssPlugin(t *testing.T) {
 			}
 		}
 	}
+
 }
