@@ -1,8 +1,6 @@
 # 第一个阶段：编译 Go 程序
 FROM golang:alpine AS builder
 WORKDIR $GOPATH/src/aria2-ext
-# 将代码加入到镜像中
-ADD . ./
 # 设置交叉编译环境
 RUN apk add build-base
 ENV CGO_ENABLED=1
@@ -10,6 +8,8 @@ ENV GOOS=linux
 ENV GOARCH=amd64
 ENV GO111MODULE=on
 ENV GOPROXY="https://goproxy.io"
+# 将代码加入到镜像中
+ADD . ./
 # 编译程序
 RUN go build -o aria2-ext . && \
     go build -o plugin-rss.so -buildmode=plugin ./plugin/default/RssPlugin.go
