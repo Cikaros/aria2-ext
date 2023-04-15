@@ -1,6 +1,9 @@
 # 第一个阶段：编译 Go 程序
 FROM golang:alpine AS builder
 WORKDIR $GOPATH/src/aria2-ext
+ENV ALL_PROXY="http://192.168.31.100:7890"
+ENV HTTP_PROXY="http://192.168.31.100:7890"
+ENV HTTPS_PROXY="http://192.168.31.100:7890"
 # 设置交叉编译环境
 RUN apk add build-base
 ENV CGO_ENABLED=1
