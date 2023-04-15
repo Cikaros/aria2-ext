@@ -7,7 +7,6 @@ import (
 	"log"
 	"runtime"
 	"strings"
-	"sync"
 )
 
 var client argo.Client
@@ -26,8 +25,7 @@ func Destroy() {
 	}(client)
 }
 
-func worker(job *Parse, file *dao.File, wg *sync.WaitGroup) {
-	defer wg.Done()
+func worker(job *Parse, file *dao.File) {
 	//文件下载规则
 	if runtime.GOOS != "windows" {
 		var gid argo.GIDwithID

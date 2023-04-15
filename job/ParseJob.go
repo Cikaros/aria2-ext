@@ -6,10 +6,7 @@ import (
 	"github.com/robfig/cron"
 	"log"
 	"regexp"
-	"sync"
 )
-
-var wg sync.WaitGroup //协程任务池
 
 type Parse struct {
 	dao.Rss
@@ -34,12 +31,10 @@ func (job *Parse) Run() {
 						//数据不存在
 						file.Reference = job.ID
 						dao.Conn.Create(&file) //创建数据
-						wg.Add(1)
-						go worker(job, &file, &wg) //创建一个 goroutine 执行任务下载
+						worker(job, &file)     //创建一个 goroutine 执行任务下载
 					}
 				}
 			}
-			wg.Wait() //goroutine 全部执行完成
 			log.Printf("Running RssJob[%s] is Ok!\n", job.Title)
 		} else {
 			log.Printf("Failed to parsing RssJob[%s]. Procedure: %v\n", job.Title, err)
