@@ -34,8 +34,14 @@ func (i *RssPlugin) Info() plugin.Plugin {
 } //获取插件详情
 
 func (i *RssPlugin) GetBytes(job *dao.Rss) ([]byte, error) {
+	client := http.Client{
+		Transport: &http.Transport{
+			// 设置代理，从环境变量中获取
+			Proxy: http.ProxyFromEnvironment,
+		},
+	}
 	var data []byte
-	resp, err := http.Get(job.Link)
+	resp, err := client.Get(job.Link)
 	if err != nil {
 		log.Printf("Failed to request RssJob data. Procedure: %v\n", err)
 		return data, err
