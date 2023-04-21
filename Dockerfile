@@ -14,8 +14,8 @@ ENV GOPROXY="https://goproxy.io"
 # 将代码加入到镜像中
 ADD . ./
 # 编译程序
-RUN go build -o aria2-ext . && \
-    go build -o plugin-rss.so -buildmode=plugin ./plugin/default/RssPlugin.go
+RUN go build -o aria2-ext .
+RUN go build -o plugin-rss.so -buildmode=plugin ./plugin/default/RssPlugin.go
 
 # 第二个阶段：运行程序
 FROM alpine:latest
