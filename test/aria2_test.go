@@ -6,6 +6,7 @@ import (
 	plug "aria2-ext/plugin"
 	"bytes"
 	"encoding/xml"
+	"github.com/robertkrimen/otto"
 	"io"
 	"log"
 	"net/http"
@@ -121,4 +122,27 @@ func TestRssPlugin(t *testing.T) {
 		}
 	}
 
+}
+
+func TestOtto(t *testing.T) {
+	js := `
+	const API = new A()
+	class A {
+		constructor() {
+		}
+		
+		getUrl(obj) {
+			return obj.msg;
+		}
+	
+	}
+`
+	vm := otto.New()
+	_, _ = vm.Run(js)
+	obj, _ := vm.Get("API")
+	params := map[string]string{
+		"msg": "Hello,World!",
+	}
+	value, _ := obj.Object().Call("getUrl", params)
+	println(value.String())
 }
