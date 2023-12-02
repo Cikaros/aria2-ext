@@ -10,7 +10,7 @@ RUN cargo install diesel_cli --no-default-features --features sqlite && \
   diesel migration run
 
 # 创建最终镜像
-FROM alpine:latest
+FROM debian:bullseye-slim
 # 设置工作目录
 WORKDIR /app
 
@@ -19,7 +19,9 @@ COPY --from=builder /app/target/release/aria2-ext /app/aria2-ext
 COPY --from=builder /app/target/release/libdefault_plugin.so /app/plugins/libdefault_plugin.so
 COPY --from=builder /app/config/aria2-ext.db /app/config/aria2-ext.db
 
-RUN chmod +x /app/aria2-ext
+RUN chmod +x /app/aria2-ext && \
+  sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/ sources.list && \
+  apt-get update && apt-get install -y libsqlite3-dev extra-runtime-dependencies && rm -rf /var/lib/apt/lists/*
 
 ENV ARIA2_DB=/app/config/aria2-ext.db
 ENV ARIA2_PLUGIN_PATH=/app/plugins
