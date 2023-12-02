@@ -5,4 +5,5 @@
 /tests
 Cargo.lock
 env.ps1
-aria2c.ps1
+aria2-pro.ps1
+aria2-ext.ps1
