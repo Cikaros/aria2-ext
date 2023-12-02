@@ -63,6 +63,7 @@ impl Plugin for DefaultPlugin {
             .channel
             .item
             .into_iter()
+            .filter(|item| true)
             .map(|item| File {
                 id: None,
                 reference: sub.id,

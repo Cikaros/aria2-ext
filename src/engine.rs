@@ -166,8 +166,8 @@ impl Manager {
 
                 for sub in &subscriptions {
                     info!(
-                        "【{}】[{}] <{}> : {}",
-                        sub.title, sub.cron, sub.link, sub.path
+                        "【{}】<{}> : {}",
+                        sub.title, sub.link, sub.path
                     );
                     if let Some(plugin) = self.get_plugin_by_name(&sub.plugin_by) {
                         let result: Result<Vec<File>, _> = plugin.process_subscription(&sub);
