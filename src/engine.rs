@@ -186,7 +186,6 @@ impl Manager {
                                 let mut result: Option<String> = None;
                                 if let Some((uris, options, position)) = plugin.get_uri(&sub, &file)
                                 {
-                                    debug!("download uris...");
                                     if let Ok(r) =
                                         client.add_uri(uris, options, position, None).await
                                     {
@@ -200,7 +199,7 @@ impl Manager {
                                         .add_torrent(torrent, uris, options, position, None)
                                         .await
                                     {
-                                        debug!("download uris result {:?}", r);
+                                        debug!("download torrent result {:?}", r);
                                         result = Some(r);
                                     }
                                 } else if let Some((metalink, options, position)) =
@@ -209,7 +208,7 @@ impl Manager {
                                     if let Ok(r) =
                                         client.add_metalink(metalink, options, position, None).await
                                     {
-                                        debug!("download uris result {:?}", r);
+                                        debug!("download metalink result {:?}", r);
                                         result = Some(r);
                                     }
                                 }
