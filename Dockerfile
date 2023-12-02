@@ -15,9 +15,14 @@ FROM alpine:latest
 WORKDIR /app
 
 # 从构建阶段复制二进制文件
-COPY --from=builder /app/target/release/aria2-ext ./aria2-ext
-COPY --from=builder /app/target/release/libdefault_plugin.so ./plugins/libdefault-plugins.so
-COPY --from=builder /app/config/aria2-ext.db ./config/aria2-ext.db
+COPY --from=builder /app/target/release/aria2-ext /app/aria2-ext
+COPY --from=builder /app/target/release/libdefault_plugin.so /app/plugins/libdefault_plugin.so
+COPY --from=builder /app/config/aria2-ext.db /app/config/aria2-ext.db
+
+RUN chmod +x /app/aria2-ext
+
+ENV ARIA2_DB=/app/config/aria2-ext.db
+ENV ARIA2_PLUGIN_PATH=/app/plugins
 
 # 运行应用程序
-CMD ["./aria2-ext"]
+ENTRYPOINT ["./aria2-ext"]
