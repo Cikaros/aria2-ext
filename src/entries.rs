@@ -15,7 +15,6 @@ pub struct Subscription {
     pub description: String,
     pub plugin_by: String,
     pub limit: String,
-    pub cron: String,
     pub path: String,
     pub enable: bool,
 }

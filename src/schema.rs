@@ -31,7 +31,6 @@ diesel::table! {
         description -> Text,
         plugin_by -> Text,
         limit -> Text,
-        cron -> Text,
         path -> Text,
         enable -> Bool,
     }
