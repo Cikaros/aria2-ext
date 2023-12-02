@@ -1,0 +1,8 @@
+/config
+/downloads
+/target
+/plugins
+/tests
+Cargo.lock
+env.ps1
+aria2c.ps1
