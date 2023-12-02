@@ -13,6 +13,7 @@ use reqwest::Proxy;
 use rss::*;
 use std::env;
 use std::error::Error;
+use regex::Regex;
 
 #[derive(Default, Debug)]
 pub struct DefaultPlugin;
@@ -59,11 +60,13 @@ impl Plugin for DefaultPlugin {
 
         let rss: Rss = serde_xml_rs::from_str(&body)?;
 
+        let regex = Regex::new(&sub.limit)?;
+
         let files = rss
             .channel
             .item
             .into_iter()
-            .filter(|item| true)
+            .filter(|item| regex.is_match(&item.guid.guid))
             .map(|item| File {
                 id: None,
                 reference: sub.id,

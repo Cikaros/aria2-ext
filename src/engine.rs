@@ -147,7 +147,7 @@ impl Manager {
         let mut db = Db::new();
         let client = get_aria2_service().await;
         // 创建一个 cron 表达式的 Schedule
-        let aria2_cron = env::var("ARIA2_CRON").unwrap_or(String::from("0/30 * * * * *"));
+        let aria2_cron = env::var("ARIA2_CRON").unwrap_or(String::from("0 0 0/1 * * *"));
         let schedule = Schedule::from_str(&aria2_cron);
         if let Ok(s) = schedule {
             let running = self.enable.clone();
