@@ -7,7 +7,7 @@ COPY . .
 # 构建应用程序
 RUN cargo install diesel_cli --no-default-features --features sqlite && \
   cargo build --release && \
-  diesel migration run
+  diesel migration setup && diesel migration redo
 
 # 创建最终镜像
 FROM debian:bullseye-slim
