@@ -4,9 +4,13 @@ FROM rust:latest as builder
 WORKDIR /app
 # 拷贝项目文件
 COPY . .
+
+
 # 构建应用程序
 RUN cargo install diesel_cli --no-default-features --features sqlite && \
-  cargo build --release && \
+  cargo build --release
+
+RUN apt-get update && apt-get install -y libsqlite3-dev && \
   diesel setup && diesel migration run
 
 # 创建最终镜像
