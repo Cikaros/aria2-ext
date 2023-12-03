@@ -10,9 +10,6 @@ COPY . .
 RUN cargo install diesel_cli --no-default-features --features sqlite && \
   cargo build --release
 
-RUN apt-get update && apt-get install -y libsqlite3-dev && \
-  diesel setup && diesel migration run
-
 # 创建最终镜像
 FROM debian:bullseye-slim
 # 设置工作目录
@@ -21,7 +18,7 @@ WORKDIR /app
 # 从构建阶段复制二进制文件
 COPY --from=builder /app/target/release/aria2-ext /app/aria2-ext
 COPY --from=builder /app/target/release/libdefault_plugin.so /app/plugins/libdefault_plugin.so
-COPY --from=builder /app/config/aria2-ext.db /app/config/aria2-ext.db
+COPY --from=builder /app/aria2-ext.db /app/config/aria2-ext.db
 
 RUN chmod +x /app/aria2-ext && \
   #sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/ sources.list && \
