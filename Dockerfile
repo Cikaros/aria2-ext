@@ -11,7 +11,7 @@ RUN cargo install diesel_cli --no-default-features --features sqlite && \
   cargo build --release
 
 # 创建最终镜像
-FROM debian:bullseye-slim
+FROM debian:stable-slim
 # 设置工作目录
 WORKDIR /app
 
@@ -22,7 +22,7 @@ COPY --from=builder /app/aria2-ext.db /app/config/aria2-ext.db
 
 RUN chmod +x /app/aria2-ext && \
   #sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/ sources.list && \
-  apt-get update && apt-get install -y libsqlite3-dev extra-runtime-dependencies && rm -rf /var/lib/apt/lists/*
+  apt-get update && apt-get install -y libsqlite3-dev && rm -rf /var/lib/apt/lists/*
 
 ENV RUST_LOG=info
 ENV ARIA2_DB=/app/config/aria2-ext.db
