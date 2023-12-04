@@ -158,8 +158,6 @@ impl Manager {
                 let delay = next.signed_duration_since(chrono::Local::now());
                 // 等待时间间隔
                 let delay_duration = Duration::from(delay.to_std().unwrap());
-                debug!("task waitting...{:?}", delay_duration);
-                thread::sleep(delay_duration);
                 debug!("task running!");
                 // 加载订阅任务
                 let subscriptions = db.get_subscriptions();
@@ -229,6 +227,8 @@ impl Manager {
                     }
                 }
                 let _ = client.save_session();
+                debug!("task waitting...{:?}", delay_duration);
+                thread::sleep(delay_duration);
             }
         } else {
             warn!(
