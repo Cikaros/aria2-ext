@@ -22,7 +22,7 @@ COPY --from=builder /app/aria2-ext.db /app/config/aria2-ext.db
 
 RUN chmod +x /app/aria2-ext && \
   #sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/ sources.list && \
-  apt-get update && apt-get install -y libsqlite3-dev && rm -rf /var/lib/apt/lists/*
+  apt-get update && apt-get install -y libsqlite3-dev ca-certificates && rm -rf /var/lib/apt/lists/*
 
 ENV RUST_LOG=info
 ENV ARIA2_DB=/app/config/aria2-ext.db
