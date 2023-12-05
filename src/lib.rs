@@ -81,7 +81,7 @@ impl Plugin for DefaultPlugin {
                 torrent_content_length: Some(item.torrent.content_length),
                 torrent_pub_date: Some(item.torrent.pub_date),
                 enclosure_type: Some(item.enclosure._type),
-                enclosure_length: Some(item.enclosure.length),
+                enclosure_length: Some(item.enclosure.length as i32),
                 enclosure_url: Some(item.enclosure.url),
                 aria_id: "".to_string(),
             })

@@ -57,7 +57,7 @@ pub struct Enclosure {
     #[serde(rename = "type")]
     pub _type: String,
     #[serde(rename = "length")]
-    pub length: i32,
+    pub length: i64,
     #[serde(rename = "url")]
     pub url: String,
 }
