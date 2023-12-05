@@ -47,7 +47,7 @@ pub struct Torrent {
     #[serde(rename = "link")]
     pub link: String,
     #[serde(rename = "contentLength")]
-    pub content_length: i32,
+    pub content_length: i64,
     #[serde(rename = "pubDate")]
     pub pub_date: String,
 }

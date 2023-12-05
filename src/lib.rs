@@ -78,7 +78,7 @@ impl Plugin for DefaultPlugin {
                 title: item.title,
                 description: item.description,
                 torrent_link: Some(item.torrent.link),
-                torrent_content_length: Some(item.torrent.content_length),
+                torrent_content_length: Some(item.torrent.content_length as i32),
                 torrent_pub_date: Some(item.torrent.pub_date),
                 enclosure_type: Some(item.enclosure._type),
                 enclosure_length: Some(item.enclosure.length as i32),
