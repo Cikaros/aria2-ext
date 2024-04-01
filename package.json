@@ -1,0 +1,30 @@
+{
+  "name": "matrix-bot-ts",
+  "version": "1.0.0",
+  "description": "js版matrix-bot",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "bun build src/index.ts --minify --target=bun --outfile=./bin/app.js",
+    "bin": "bun build bin/app.js --compile --outfile=./bin/app",
+    "dev": "bun run src/index.ts",
+    "docker": "docker run --rm --init --ulimit memlock=-1:-1 -v \".\\:/home/bun/app\" oven/bun  run src/index.ts"
+  },
+  "keywords": [
+    "matrix",
+    "bot"
+  ],
+  "author": "Cikaros",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "libaria2": "^1.0.95",
+    "matrix-js-sdk": "^31.6.0",
+    "rss-parser": "^3.13.0"
+  }
+}
