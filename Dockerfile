@@ -1,17 +1,17 @@
-FROM oven/bun:debian as builder
+FROM oven/bun:alpine as builder
 WORKDIR /home/bun/app
 
 COPY ./ /home/bun/app/
 
-RUN bun install && bun build src/index.ts --target=bun --outfile=./bin/app.js
+RUN bun install && \
+    bun build src/index.ts --target=bun --outfile=./bin/app.js && \
+    bun build bin/app.js --compile --outfile=./bin/app
 
-FROM oven/bun:debian
+FROM alpine:latest
 LABEL authors="Cikaros"
 
 WORKDIR /home/bun/app
 
-COPY --from=builder /home/bun/app/bin/app.js .
+COPY --from=builder /home/bun/app/bin/app .
 
-ENTRYPOINT ["bun"]
-
-CMD ["run","app.js"]
+ENTRYPOINT ["app"]
