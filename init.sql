@@ -5,12 +5,13 @@ CREATE TABLE IF NOT EXISTS `subscriptions` (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP, -- 更新时间
   `title` text NOT NULL , -- 标题
   `link` text NOT NULL , -- 连接地址
-  `description` text NOT NULL  DEFAULT "", -- 描述
-  `plugin_by` text NOT NULL  DEFAULT "default-plugin", -- 关联处理插件
-  `limit` text NOT NULL  DEFAULT "", -- 限制参数
-  `path` text NOT NULL  DEFAULT "/downloads", -- 下载路径
+  `description` text NOT NULL  DEFAULT '', -- 描述
+  `plugin_by` text NOT NULL  DEFAULT 'default-plugin', -- 关联处理插件
+  `limit` text NOT NULL  DEFAULT '', -- 限制参数
+  `path` text NOT NULL  DEFAULT '/downloads', -- 下载路径
   `enable` TINYINT NOT NULL DEFAULT true -- 是否启用
 );
+
 -- Your SQL goes here
 CREATE TABLE IF NOT EXISTS `files` (
 `id` integer NOT NULL PRIMARY KEY AUTOINCREMENT, -- 主键
@@ -21,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `files` (
 `is_perma_link` TINYINT NOT NULL DEFAULT false, -- 是否为永久连接
 `link` text NOT NULL, -- 连接地址
 `title` text NOT NULL, -- 显示标题
-`description` text NOT NULL DEFAULT "", -- 描述信息
+`description` text NOT NULL DEFAULT '', -- 描述信息
 `torrent_link` text, -- 种子连接地址
 `torrent_content_length` integer, -- 种子内容长度
 `torrent_pub_date` text, -- 种子发布时间

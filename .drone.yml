@@ -1,0 +1,18 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: aria2-ext
+    image: docker:dind
+    volumes:
+      - name: docker-sock
+        path: /var/run/docker.sock
+    commands:
+      - docker rmi -f cikaros/aria2-ext:v0.6.x
+      - docker build -t cikaros/aria2-ext:v0.6.x .
+      - docker push cikaros/aria2-ext:v0.6.x
+
+volumes:
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock

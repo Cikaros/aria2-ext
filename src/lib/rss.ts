@@ -1,9 +1,11 @@
 import Parser from "rss-parser";
 import C from "../config";
-import bot from "./bot";
+import bot, {type EventHandler} from "./bot";
 import db from "./db";
 import type {AddSubscription, Subscription} from "./entry";
 import downloader from "./downloader.ts";
+import {MsgType} from "matrix-js-sdk";
+import * as sdk from "matrix-js-sdk";
 
 type Torrent = {
     link: string,
@@ -32,7 +34,12 @@ class Rss {
                 item: ['guid', 'link', 'title', 'description', 'torrent', 'enclosure']
             }
         });
-        
+        bot.addCommend({
+            obj: this,
+            regex: /^add (.*)$/,
+            type: MsgType.Text,
+            handler: this._addSubscription
+        });
     }
 
     async callback() {
@@ -69,12 +76,22 @@ class Rss {
             });
         for (let file of addFiles) {
             //通知downloader进行下载
-            file.aria_id = await downloader.addUri(file.enclosure_url, subscription.path);
+            file.aria_id = await downloader.addUriAndDir(file.enclosure_url, subscription.path);
             //向Admin发送消息事件
             await bot.sendTextNotice(`已将[${file.title}]加入下载列表！`);
         }
         //插入数据库
         db.addFiles(addFiles);
+    }
+
+    async _addSubscription(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
+        const sender = event.getSender();
+        const content = event.getContent();
+        const params = self.regex.exec(content['body']);
+        if (params !== null) {
+            const url = params[1];
+            await self.obj.addSubscription(url);
+        }
     }
 
     async addSubscription(url: string) {

@@ -1,7 +1,9 @@
 import {WebSocket as Aria2} from "libaria2";
 import {Adapter} from "libaria2";
-import bot from "./bot";
+import bot, {type EventHandler} from "./bot";
 import C from "../config";
+import {MsgType} from "matrix-js-sdk";
+import * as sdk from "matrix-js-sdk";
 
 class Downloader {
 
@@ -25,6 +27,12 @@ class Downloader {
             .once('aria2.onDownloadComplete', this.onDownloadComplete)
             .once('aria2.onDownloadError', this.onDownloadError)
             .once('aria2.onBtDownloadComplete', this.onBtDownloadComplete);
+        bot.addCommend({
+            obj: this,
+            regex: /^download (.*)$/,
+            type: MsgType.Text,
+            handler: this._addUri
+        });
     }
 
     async onDownloadStart(e: Adapter.IAria2NotificationEvent) {
@@ -78,7 +86,21 @@ class Downloader {
         return await this.aria2.getVersion();
     }
 
-    async addUri(uris: string, dir: string) {
+    async _addUri(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
+        const sender = event.getSender();
+        const content = event.getContent();
+        const params = self.regex.exec(content['body']);
+        if (params !== null) {
+            const url = params[1];
+            await self.obj.addUri(url);
+        }
+    }
+
+    async addUri(uris: string) {
+        return await this.aria2.addUri(uris);
+    }
+
+    async addUriAndDir(uris: string, dir: string) {
         return await this.aria2.addUri(uris, {dir: dir});
     }
 

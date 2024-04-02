@@ -3,9 +3,10 @@ import {EventType, MsgType, ReceiptType, RoomEvent} from "matrix-js-sdk";
 import C from "../config";
 
 export type EventHandler = {
+    obj: any,
     regex: RegExp,
     type: MsgType,
-    handler: (event: sdk.MatrixEvent, room: sdk.Room) => void
+    handler: (event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) => void
 }
 
 class Bot {
@@ -22,6 +23,7 @@ class Bot {
         this.roomId = '';
         this.commands = [];
         this.addCommend({
+            obj: this,
             regex: /^.*/,
             type: MsgType.Text,
             handler: this._default_event_handler
@@ -80,13 +82,13 @@ class Bot {
         if (room !== undefined) {
             const command = self.findCommand(event);
             if (command !== undefined) {
-                command.handler(event, room);
+                command.handler(event, room, command);
             }
             await this.client.sendReadReceipt(event, ReceiptType.FullyRead);
         }
     }
 
-    async _default_event_handler(event: sdk.MatrixEvent, room: sdk.Room) {
+    async _default_event_handler(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
         const sender = event.getSender();
         const content = event.getContent();
         await bot.sendTextMessage("收到消息啦！:: " + content['body']);

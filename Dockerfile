@@ -10,7 +10,6 @@ LABEL authors="Cikaros"
 
 WORKDIR /home/bun/app
 
-
 COPY --from=builder /home/bun/app/bin/app.js .
 
 ENTRYPOINT ["bun"]
