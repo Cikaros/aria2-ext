@@ -3,7 +3,7 @@ WORKDIR /home/bun/app
 
 COPY ./ /home/bun/app/
 
-RUN bun build src/index.ts --target=bun --outfile=./bin/app.js
+RUN bun install && bun build src/index.ts --target=bun --outfile=./bin/app.js
 
 FROM oven/bun:debian
 LABEL authors="Cikaros"
