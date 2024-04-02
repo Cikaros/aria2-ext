@@ -13,6 +13,6 @@ WORKDIR /home/bun/app
 
 COPY --from=builder /home/bun/app/bin/app.js .
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["bun"]
 
-CMD ["app.js"]
+CMD ["run","app.js"]
