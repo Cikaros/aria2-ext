@@ -4,14 +4,15 @@ WORKDIR /home/bun/app
 COPY ./ /home/bun/app/
 
 RUN bun install && \
-    bun build src/index.ts --target=bun --outfile=./bin/app.js && \
-    bun build bin/app.js --compile --outfile=./bin/app
+    bun build src/index.ts --target=bun --outfile=./bin/app.js
 
-FROM alpine:latest
+FROM oven/bun:alpine
 LABEL authors="Cikaros"
 
 WORKDIR /home/bun/app
 
 COPY --from=builder /home/bun/app/bin/app .
 
-CMD ["./app"]
+ENTRYPOINT ["bun"]
+
+CMD ["run","app.js"]
