@@ -1,4 +1,4 @@
-FROM oven/bun:alpine as builder
+FROM oven/bun as builder
 WORKDIR /home/bun/app
 
 COPY ./ /home/bun/app/
@@ -6,7 +6,7 @@ COPY ./ /home/bun/app/
 RUN bun install && \
     bun build src/index.ts --target=node --outfile=./bin/app.js
 
-FROM node:lts-alpine
+FROM oven/bun
 LABEL authors="Cikaros"
 
 WORKDIR /home/bun/app
