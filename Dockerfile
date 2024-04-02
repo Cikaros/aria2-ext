@@ -14,4 +14,4 @@ WORKDIR /home/bun/app
 
 COPY --from=builder /home/bun/app/bin/app .
 
-ENTRYPOINT ["app"]
+CMD ["./app"]
