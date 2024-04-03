@@ -4,7 +4,7 @@ WORKDIR /home/bun/app
 COPY ./ /home/bun/app/
 
 RUN bun install && \
-    bun build src/index.ts --target=node --outfile=./bin/app.js
+    bun build src/index.ts --target=run --outfile=./bin/app.js
 
 FROM oven/bun
 LABEL authors="Cikaros"

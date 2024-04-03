@@ -10,7 +10,6 @@ steps:
     commands:
       - docker rmi -f cikaros/aria2-ext:v0.6.x
       - docker build -t cikaros/aria2-ext:v0.6.x .
-      - docker push cikaros/aria2-ext:v0.6.x
 
 volumes:
   - name: docker-sock
