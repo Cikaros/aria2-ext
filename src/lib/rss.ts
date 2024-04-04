@@ -46,8 +46,12 @@ class Rss {
         //数据库查询
         const subscriptions: Subscription[] = db.getSubscriptions();
         for (let subscription of subscriptions) {
-            const channel = await this.parser.parseURL(subscription.link);
-            await this.process(subscription, channel);
+            try {
+                const channel = await this.parser.parseURL(subscription.link);
+                await this.process(subscription, channel);
+            } catch (e) {
+                await bot.sendTextMessage(`订阅[${subscription.title}]获取失败！`);
+            }
         }
     }
 
