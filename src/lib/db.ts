@@ -46,7 +46,7 @@ class Db {
 
     async init() {
         //开启缓存模式
-        this.database.exec("PRAGMA journal_mode = WAL;");
+        //this.database.exec("PRAGMA journal_mode = WAL;");
         this.database.exec(TABLE_SUBSCRIPTIONS);
         this.database.exec(TABLE_FILES);
     }
