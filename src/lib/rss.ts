@@ -40,6 +40,18 @@ class Rss {
             type: MsgType.Text,
             handler: this._addSubscription
         });
+        bot.addCommend({
+            obj: this,
+            regex: /^list$/,
+            type: MsgType.Text,
+            handler: this._showSubscription
+        });
+        bot.addCommend({
+            obj: this,
+            regex: /^update (\d+)$/,
+            type: MsgType.Text,
+            handler: this._updateSubscription
+        });
     }
 
     async callback() {
@@ -47,15 +59,15 @@ class Rss {
         const subscriptions: Subscription[] = db.getSubscriptions();
         for (let subscription of subscriptions) {
             try {
-                const channel = await this.parser.parseURL(subscription.link);
-                await this.process(subscription, channel);
+                await this.process(subscription);
             } catch (e) {
                 await bot.sendTextMessage(`订阅[${subscription.title}]获取失败！`);
             }
         }
     }
 
-    private async process(subscription: Subscription, channel: Parser.Output<CustomItem>) {
+    private async process(subscription: Subscription) {
+        const channel = await this.parser.parseURL(subscription.link);
         //确定数据库中是否存在这些数据
         const files = db.getFiles(subscription);
         const guids = files.map(item => item.guid);
@@ -98,6 +110,29 @@ class Rss {
         }
     }
 
+    async _showSubscription(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
+        const sender = event.getSender();
+        const content = event.getContent();
+        const subscriptions = db.getSubscriptions();
+        let body = '<table>';
+        body += `<tr><th>ID</th><th>标题</th><th>订阅地址</th></tr>`;
+        for (let subscription of subscriptions) {
+            body += `<tr><td>${subscription.id}</td><td>${subscription.title}</td><td>${subscription.link}</td></tr>`
+        }
+        body += '</table>';
+        await bot.sendHtmlMessage("订阅信息：", body);
+    }
+
+    async _updateSubscription(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
+        const sender = event.getSender();
+        const content = event.getContent();
+        const params = self.regex.exec(content['body']);
+        if (params !== null) {
+            const id = parseInt(params[1]);
+            await self.obj.updateSubscription(id);
+        }
+    }
+
     async addSubscription(url: string) {
         //获取订阅信息,
         const channel = await this.parser.parseURL(url);
@@ -117,6 +152,23 @@ class Rss {
         }
         //插入数据库
         db.addSubscriptions([subscription]);
+    }
+
+    async updateSubscription(id: number) {
+        let findSubscription = null;
+        for (let subscription of db.getSubscriptions()) {
+            if (subscription.id === id) {
+                findSubscription = subscription;
+                break;
+            }
+        }
+        if (findSubscription !== null) {
+            try {
+                await this.process(findSubscription);
+            } catch (e) {
+                await bot.sendTextMessage(`订阅[${findSubscription.title}]获取失败！`);
+            }
+        }
     }
 
     stop() {
