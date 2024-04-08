@@ -36,19 +36,19 @@ class Rss {
         });
         bot.addCommend({
             obj: this,
-            regex: /^add ((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\\@?^=%&/~\+#])?)$/,
+            regex: /^add\W+((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\\@?^=%&/~\+#])?)$/,
             type: MsgType.Text,
             handler: this._addSubscription
         });
         bot.addCommend({
             obj: this,
-            regex: /^list$/,
+            regex: /^list\W+$/,
             type: MsgType.Text,
             handler: this._showSubscription
         });
         bot.addCommend({
             obj: this,
-            regex: /^update (\d+)$/,
+            regex: /^update\W+(\d+)$/,
             type: MsgType.Text,
             handler: this._updateSubscription
         });
@@ -156,12 +156,13 @@ class Rss {
 
     async updateSubscription(id: number) {
         let findSubscription = db.getSubscriptions();
-        if (id !== -1) {
+        if (id > 0) {
             findSubscription = findSubscription.filter(item => item.id === id);
         }
         for (let subscription of findSubscription) {
             try {
                 await this.process(subscription);
+                await bot.sendTextMessage(`订阅[${subscription.title}]获取成功！`);
             } catch (e) {
                 await bot.sendTextMessage(`订阅[${subscription.title}]获取失败！`);
             }
