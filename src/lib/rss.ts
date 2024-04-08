@@ -36,7 +36,7 @@ class Rss {
         });
         bot.addCommend({
             obj: this,
-            regex: /^add (.*)$/,
+            regex: /^add ((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\\@?^=%&/~\+#])?)$/,
             type: MsgType.Text,
             handler: this._addSubscription
         });
@@ -94,7 +94,7 @@ class Rss {
             //通知downloader进行下载
             file.aria_id = await downloader.addUriAndDir(file.enclosure_url, subscription.path);
             //向Admin发送消息事件
-            await bot.sendTextNotice(`已将[${file.title}]加入下载列表！`);
+            await bot.sendTextMessage(`已将[${file.title}]加入下载列表！`);
         }
         //插入数据库
         db.addFiles(addFiles);
@@ -114,13 +114,12 @@ class Rss {
         const sender = event.getSender();
         const content = event.getContent();
         const subscriptions = db.getSubscriptions();
-        let body = '<table>';
-        body += `<tr><th>ID</th><th>标题</th><th>订阅地址</th></tr>`;
+        let body = '|ID|标题|订阅地址|';
+        body += `+----+----+------+`;
         for (let subscription of subscriptions) {
-            body += `<tr><td>${subscription.id}</td><td>${subscription.title}</td><td>${subscription.link}</td></tr>`
+            body += `|${subscription.id}|${subscription.title}|${subscription.link}|`
         }
-        body += '</table>';
-        await bot.sendHtmlMessage("订阅信息：", body);
+        await bot.sendHtmlMessage("订阅信息列表", body);
     }
 
     async _updateSubscription(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
@@ -155,18 +154,15 @@ class Rss {
     }
 
     async updateSubscription(id: number) {
-        let findSubscription = null;
-        for (let subscription of db.getSubscriptions()) {
-            if (subscription.id === id) {
-                findSubscription = subscription;
-                break;
-            }
+        let findSubscription = db.getSubscriptions();
+        if (id !== -1) {
+            findSubscription = findSubscription.filter(item => item.id === id);
         }
-        if (findSubscription !== null) {
+        for (let subscription of findSubscription) {
             try {
-                await this.process(findSubscription);
+                await this.process(subscription);
             } catch (e) {
-                await bot.sendTextMessage(`订阅[${findSubscription.title}]获取失败！`);
+                await bot.sendTextMessage(`订阅[${subscription.title}]获取失败！`);
             }
         }
     }
