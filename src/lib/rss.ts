@@ -42,7 +42,7 @@ class Rss {
         });
         bot.addCommend({
             obj: this,
-            regex: /^list\W+$/,
+            regex: /^list\W*$/,
             type: MsgType.Text,
             handler: this._showSubscription
         });
@@ -117,7 +117,10 @@ class Rss {
         let body = '<table border="1">';
         body += `<thead><tr><th>ID</th><th>标题</th><th>订阅地址</th></tr></thead><tbody>`;
         for (let subscription of subscriptions) {
-            body += `<tr><td>${subscription.id}</td><td>${subscription.title}</td><td>${subscription.link}</td></tr>`
+            body += `<details>
+<summary><tr><td>${subscription.id}</td><td>${subscription.title}</td><td>${subscription.link}</td></tr></summary>
+<p>${subscription.description}</p>
+</details>`;
         }
         body += '</tbody></table>';
         await bot.sendHtmlMessage("订阅信息：", body);

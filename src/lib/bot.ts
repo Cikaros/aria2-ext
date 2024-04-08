@@ -91,7 +91,7 @@ class Bot {
     async _default_event_handler(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
         const sender = event.getSender();
         const content = event.getContent();
-        await bot.sendTextMessage("收到消息啦！:: " + content['body']);
+        await bot.sendHtmlMessage("收到消息啦！:: ", content['body']);
         console.info("(%s) %s :: %s", room.name, sender, content.body);
     }
 
