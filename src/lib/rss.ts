@@ -52,6 +52,12 @@ class Rss {
             type: MsgType.Text,
             handler: this._updateSubscription
         });
+        bot.addCommend({
+            obj: this,
+            regex: /^detail\W+(\d+)$/,
+            type: MsgType.Text,
+            handler: this._detailSubscription
+        });
     }
 
     async callback() {
@@ -117,10 +123,7 @@ class Rss {
         let body = '<table border="1">';
         body += `<thead><tr><th>ID</th><th>标题</th><th>订阅地址</th></tr></thead><tbody>`;
         for (let subscription of subscriptions) {
-            body += `<details>
-<summary><tr><td>${subscription.id}</td><td>${subscription.title}</td><td>${subscription.link}</td></tr></summary>
-<p>${subscription.description}</p>
-</details>`;
+            body += `<tr><td>${subscription.id}</td><td>${subscription.title}</td><td>${subscription.link}</td></tr>`;
         }
         body += '</tbody></table>';
         await bot.sendHtmlMessage("订阅信息：", body);
@@ -134,6 +137,35 @@ class Rss {
             const id = parseInt(params[1]);
             await self.obj.updateSubscription(id);
         }
+    }
+
+    async _detailSubscription(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
+        const sender = event.getSender();
+        const content = event.getContent();
+        const params = self.regex.exec(content['body']);
+        if (params !== null) {
+            const id = parseInt(params[1]);
+            const subscription = db.getSubscription(id);
+            if (subscription !== null) {
+                const count = db.countFiles(subscription);
+                let body = `<details>
+                <summary>${subscription.title}</summary>	
+                <table>
+                <tr><th>ID</th><td>${subscription.id}</td></tr>
+                <tr><th>标题</th><td>${subscription.title}</td></tr>
+                <tr><th>详细</th><td>${subscription.description}</td></tr>
+                <tr><th>地址</th><td>${subscription.link}</td></tr>
+                <tr><th>限制</th><td>${subscription.limit}</td></tr>
+                <tr><th>下载位置</th><td>${subscription.path}</td></tr>
+                <tr><th>已下载数量</th><td>${count}</td></tr>
+                </table>
+            </details>`;
+                await bot.sendHtmlMessage("订阅信息详情：", body);
+                return;
+            }
+        }
+        await bot.sendTextMessage(`该订阅不存在！`);
+
     }
 
     async addSubscription(url: string) {

@@ -68,6 +68,23 @@ class Db {
         return this.database.query<Subscription, any>(sql).all();
     }
 
+    getSubscription(id: number): Subscription | null {
+        const sql = `
+            SELECT id,
+                   created_at,
+                   updated_at,
+                   title,
+                   link,
+                   description,
+                   plugin_by,
+                   "limit",
+                   path,
+                   enable
+            FROM subscriptions
+            WHERE enable = true AND id = ?`;
+        return this.database.query<Subscription, any>(sql).get(id);
+    }
+
     addSubscriptions(subscriptions: AddSubscription[]) {
         const sql = `
             INSERT INTO subscriptions (title, link, description, path)
@@ -111,6 +128,14 @@ class Db {
             FROM files
             WHERE reference = ?`;
         return this.database.query<File, any>(sql).all(subscription.id);
+    }
+
+    countFiles(subscription: Subscription): number {
+        const sql = `
+            SELECT id
+            FROM files
+            WHERE reference = ?`;
+        return this.database.query<File, any>(sql).all(subscription.id).length;
     }
 
     addFiles(addFiles: AddFile[]) {
