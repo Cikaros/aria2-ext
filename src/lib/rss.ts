@@ -54,6 +54,12 @@ class Rss {
         });
         bot.addCommend({
             obj: this,
+            regex: /^limit\W+(\d+)\W+([~\W]*)$/,
+            type: MsgType.Text,
+            handler: this._limitSubscription
+        });
+        bot.addCommend({
+            obj: this,
             regex: /^detail\W+(\d+)$/,
             type: MsgType.Text,
             handler: this._detailSubscription
@@ -77,10 +83,9 @@ class Rss {
         //确定数据库中是否存在这些数据
         const files = db.getFiles(subscription);
         const guids = files.map(item => item.guid);
-        const limit = new RegExp(subscription.limit)
         //过滤出不存在的数据
         const addFiles = channel.items
-            .filter(item => limit.test(item.guid))
+            .filter(item => item.guid.indexOf(item.guid) !== -1)
             .filter(item => guids.indexOf(item.guid) === -1)
             .map(item => {
                 return {
@@ -142,33 +147,25 @@ class Rss {
         }
     }
 
+    async _limitSubscription(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
+        const sender = event.getSender();
+        const content = event.getContent();
+        const params = self.regex.exec(content['body']);
+        if (params !== null) {
+            const id = parseInt(params[1]);
+            const limit = parseInt(params[2]);
+            await self.obj.limitSubscription(id, limit);
+        }
+    }
+
     async _detailSubscription(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
         const sender = event.getSender();
         const content = event.getContent();
         const params = self.regex.exec(content['body']);
         if (params !== null) {
             const id = parseInt(params[1]);
-            const subscription = db.getSubscription(id);
-            if (subscription !== null) {
-                const count = db.countFiles(subscription);
-                let body = `<details>
-                <summary>${subscription.title}</summary>	
-                <table>
-                <tr><th>ID</th><td>${subscription.id}</td></tr>
-                <tr><th>标题</th><td>${subscription.title}</td></tr>
-                <tr><th>详细</th><td>${subscription.description}</td></tr>
-                <tr><th>地址</th><td>${subscription.link}</td></tr>
-                <tr><th>限制</th><td>${subscription.limit}</td></tr>
-                <tr><th>下载位置</th><td>${subscription.path}</td></tr>
-                <tr><th>已下载数量</th><td>${count}</td></tr>
-                </table>
-            </details>`;
-                await bot.sendHtmlMessage("订阅信息详情：", body);
-                return;
-            }
+            await self.obj.detailSubscription(id);
         }
-        await bot.sendTextMessage(`该订阅不存在！`);
-
     }
 
     async addSubscription(url: string) {
@@ -209,6 +206,39 @@ class Rss {
             } catch (e) {
                 await bot.sendTextMessage(`订阅[${subscription.title}]获取失败！`);
             }
+        }
+    }
+
+    async limitSubscription(id: number, limit: string) {
+        const subscription = db.getSubscription(id);
+        if (subscription !== null) {
+            subscription.limit = limit;
+            db.updateSubscriptions([subscription]);
+            await this.detailSubscription(id);
+        } else {
+            await bot.sendTextMessage(`该订阅不存在！`);
+        }
+    }
+
+    async detailSubscription(id: number) {
+        const subscription = db.getSubscription(id);
+        if (subscription !== null) {
+            const count = db.countFiles(subscription);
+            let body = `<details>
+                <summary>${subscription.title}</summary>	
+                <table>
+                <tr><th>ID</th><td>${subscription.id}</td></tr>
+                <tr><th>标题</th><td>${subscription.title}</td></tr>
+                <tr><th>详细</th><td>${subscription.description}</td></tr>
+                <tr><th>地址</th><td>${subscription.link}</td></tr>
+                <tr><th>限制</th><td>${subscription.limit}</td></tr>
+                <tr><th>下载位置</th><td>${subscription.path}</td></tr>
+                <tr><th>已下载数量</th><td>${count}</td></tr>
+                </table>
+            </details>`;
+            await bot.sendHtmlMessage("订阅信息详情：", body);
+        } else {
+            await bot.sendTextMessage(`该订阅不存在！`);
         }
     }
 
