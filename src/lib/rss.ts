@@ -169,24 +169,29 @@ class Rss {
     }
 
     async addSubscription(url: string) {
-        //获取订阅信息,
-        const channel = await this.parser.parseURL(url);
-        //检查数据库中是否已存在该订阅
-        if (db.existsSubscription(channel.link + '')) {
-            await bot.sendTextMessage(`该订阅地址[${url}]已存在！`);
-            return;
+        try {
+            //获取订阅信息,
+            const channel = await this.parser.parseURL(url);
+            //检查数据库中是否已存在该订阅
+            if (db.existsSubscription(channel.link + '')) {
+                await bot.sendTextMessage(`该订阅地址[${url}]已存在！`);
+                return;
+            }
+            //获取配置
+            const globalOption = await downloader.getGlobalOption();
+            //构造订阅对象
+            const subscription: AddSubscription = {
+                title: channel.title + '',
+                description: channel.description + '',
+                link: channel.link + '',
+                path: `${globalOption.dir}/${channel.title}`,
+            }
+            //插入数据库
+            db.addSubscriptions([subscription]);
+            await bot.sendTextMessage(`新增订阅地址成功！`);
+        } catch (e) {
+            await bot.sendTextMessage(`新增订阅地址失败！`);
         }
-        //获取配置
-        const globalOption = await downloader.getGlobalOption();
-        //构造订阅对象
-        const subscription: AddSubscription = {
-            title: channel.title + '',
-            description: channel.description + '',
-            link: channel.link + '',
-            path: `${globalOption.dir}/${channel.title}`,
-        }
-        //插入数据库
-        db.addSubscriptions([subscription]);
     }
 
     async updateSubscription(id: number) {
