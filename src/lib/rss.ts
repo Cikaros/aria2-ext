@@ -36,31 +36,31 @@ class Rss {
         });
         bot.addCommend({
             obj: this,
-            regex: /^add\W+((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\\@?^=%&/~\+#])?)$/,
+            regex: /^add +((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\\@?^=%&/~\+#])?)$/,
             type: MsgType.Text,
             handler: this._addSubscription
         });
         bot.addCommend({
             obj: this,
-            regex: /^list\W*$/,
+            regex: /^list *$/,
             type: MsgType.Text,
             handler: this._showSubscription
         });
         bot.addCommend({
             obj: this,
-            regex: /^update\W+(\d+)$/,
+            regex: /^update +(\d+)$/,
             type: MsgType.Text,
             handler: this._updateSubscription
         });
         bot.addCommend({
             obj: this,
-            regex: /^limit\W+(\d+)\W+(.*)$/,
+            regex: /^limit +(\d+) +(.*)$/,
             type: MsgType.Text,
             handler: this._limitSubscription
         });
         bot.addCommend({
             obj: this,
-            regex: /^detail\W+(\d+)$/,
+            regex: /^detail +(\d+)$/,
             type: MsgType.Text,
             handler: this._detailSubscription
         });

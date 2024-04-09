@@ -29,7 +29,7 @@ class Downloader {
             .once('aria2.onBtDownloadComplete', this.onBtDownloadComplete);
         bot.addCommend({
             obj: this,
-            regex: /^download\W+(.*)$/,
+            regex: /^download +(.*)$/,
             type: MsgType.Text,
             handler: this._addUri
         });
