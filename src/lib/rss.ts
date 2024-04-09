@@ -153,7 +153,7 @@ class Rss {
         const params = self.regex.exec(content['body']);
         if (params !== null) {
             const id = parseInt(params[1]);
-            const limit = parseInt(params[2]);
+            const limit = params[2];
             await self.obj.limitSubscription(id, limit);
         }
     }
@@ -212,7 +212,7 @@ class Rss {
     async limitSubscription(id: number, limit: string) {
         const subscription = db.getSubscription(id);
         if (subscription !== null) {
-            subscription.limit = limit;
+            subscription.limit = limit || '';
             db.updateSubscriptions([subscription]);
             await this.detailSubscription(id);
         } else {
