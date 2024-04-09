@@ -192,7 +192,7 @@ class Db {
         const inserts = this.database.transaction(subs => {
             // @ts-ignore
             for (const sub: AddSubscription of subs) insert.run(sub.title, sub.link, sub.description, sub.path);
-            return subscriptions.length;
+            return subs.length;
         });
         return inserts(subscriptions);
     }
@@ -203,13 +203,14 @@ class Db {
             SET title       = ?,
                 link        = ?,
                 description = ?,
-                path        = ?, \`limit\` = ?
+                path        = ?,
+                "limit"     = ?
             WHERE id = ?`;
         const update: Statement<Subscription> = this.database.prepare(sql);
         const updates = this.database.transaction(subs => {
             // @ts-ignore
             for (const sub: Subscription of subs) update.run(sub.title, sub.link, sub.description, sub.path, sub.limit, sub.id);
-            return subscriptions.length;
+            return subs.length;
         });
         return updates(subscriptions);
     }
