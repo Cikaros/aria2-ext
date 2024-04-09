@@ -203,7 +203,7 @@ class Db {
             SET title       = ?,
                 link        = ?,
                 description = ?,
-                path        = ?, 'limit' = ?
+                path        = ?, \`limit\` = ?
             WHERE id = ?`;
         const update: Statement<Subscription> = this.database.prepare(sql);
         const updates = this.database.transaction(subs => {
