@@ -77,8 +77,11 @@ class Rss {
         //确定数据库中是否存在这些数据
         const files = db.getFiles(subscription);
         const guids = files.map(item => item.guid);
+        const limit = new RegExp(subscription.limit)
         //过滤出不存在的数据
-        const addFiles = channel.items.filter(item => guids.indexOf(item.guid) === -1)
+        const addFiles = channel.items
+            .filter(item => limit.test(item.guid))
+            .filter(item => guids.indexOf(item.guid) === -1)
             .map(item => {
                 return {
                     reference: subscription.id,
