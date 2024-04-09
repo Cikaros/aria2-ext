@@ -54,7 +54,7 @@ class Rss {
         });
         bot.addCommend({
             obj: this,
-            regex: /^limit\W+(\d+)\W+([~\W]*)$/,
+            regex: /^limit\W+(\d+)\W+(.*)$/,
             type: MsgType.Text,
             handler: this._limitSubscription
         });
