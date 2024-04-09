@@ -128,12 +128,20 @@ class Rss {
         const sender = event.getSender();
         const content = event.getContent();
         const subscriptions = db.getSubscriptions();
-        let body = '<table border="1">';
-        body += `<thead><tr><th>ID</th><th>标题</th><th>订阅地址</th></tr></thead><tbody>`;
+        let body = '<ul>';
         for (let subscription of subscriptions) {
-            body += `<tr><td>${subscription.id}</td><td>${subscription.title}</td><td>${subscription.link}</td></tr>`;
+            const count = db.countFiles(subscription);
+            body += `<li><details><summary>${subscription.title}</summary><table>
+                <tr><th>ID</th><td>${subscription.id}</td></tr>
+                <tr><th>标题</th><td>${subscription.title}</td></tr>
+                <tr><th>详细</th><td>${subscription.description}</td></tr>
+                <tr><th>地址</th><td>${subscription.link}</td></tr>
+                <tr><th>限制</th><td>${subscription.limit}</td></tr>
+                <tr><th>下载位置</th><td>${subscription.path}</td></tr>
+                <tr><th>已下载数量</th><td>${count}</td></tr>
+                </table></details></li>`;
         }
-        body += '</tbody></table>';
+        body += '</ul>';
         await bot.sendHtmlMessage("订阅信息：", body);
     }
 
@@ -224,9 +232,7 @@ class Rss {
         const subscription = db.getSubscription(id);
         if (subscription !== null) {
             const count = db.countFiles(subscription);
-            let body = `<details>
-                <summary>${subscription.title}</summary>	
-                <table>
+            let body = `<details><summary>${subscription.title}</summary><table>
                 <tr><th>ID</th><td>${subscription.id}</td></tr>
                 <tr><th>标题</th><td>${subscription.title}</td></tr>
                 <tr><th>详细</th><td>${subscription.description}</td></tr>
@@ -234,8 +240,7 @@ class Rss {
                 <tr><th>限制</th><td>${subscription.limit}</td></tr>
                 <tr><th>下载位置</th><td>${subscription.path}</td></tr>
                 <tr><th>已下载数量</th><td>${count}</td></tr>
-                </table>
-            </details>`;
+                </table></details>`;
             await bot.sendHtmlMessage("订阅信息详情：", body);
         } else {
             await bot.sendTextMessage(`该订阅不存在！`);
