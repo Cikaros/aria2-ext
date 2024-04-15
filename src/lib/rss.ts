@@ -85,7 +85,7 @@ class Rss {
         const guids = files.map(item => item.guid);
         //过滤出不存在的数据
         const addFiles = channel.items
-            .filter(item => item.guid.indexOf(item.guid) !== -1)
+            .filter(item => item.guid.indexOf(subscription.limit) !== -1)
             .filter(item => guids.indexOf(item.guid) === -1)
             .map(item => {
                 return {
