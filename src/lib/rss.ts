@@ -64,6 +64,18 @@ class Rss {
             type: MsgType.Text,
             handler: this._detailSubscription
         });
+        bot.addCommend({
+            obj: this,
+            regex: /^remove +(\d+)$/,
+            type: MsgType.Text,
+            handler: this._removeSubscription
+        });
+        bot.addCommend({
+            obj: this,
+            regex: /^edit +(\d+) +((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\\@?^=%&/~\+#])?)$/,
+            type: MsgType.Text,
+            handler: this._editSubscription
+        });
     }
 
     async callback() {
@@ -176,6 +188,27 @@ class Rss {
         }
     }
 
+    async _removeSubscription(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
+        const sender = event.getSender();
+        const content = event.getContent();
+        const params = self.regex.exec(content['body']);
+        if (params !== null) {
+            const id = parseInt(params[1]);
+            await self.obj.removeSubscription(id);
+        }
+    }
+
+    async _editSubscription(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
+        const sender = event.getSender();
+        const content = event.getContent();
+        const params = self.regex.exec(content['body']);
+        if (params !== null) {
+            const id = parseInt(params[1]);
+            const url = params[2];
+            await self.obj.editSubscription(id, url);
+        }
+    }
+
     async addSubscription(url: string) {
         try {
             //获取订阅信息,
@@ -244,6 +277,42 @@ class Rss {
             await bot.sendHtmlMessage("订阅信息详情：", body);
         } else {
             await bot.sendTextMessage(`该订阅不存在！`);
+        }
+    }
+
+    async removeSubscription(id: number) {
+        const subscription = db.getSubscription(id);
+        if (subscription !== null) {
+            subscription.enable = false;
+            db.updateSubscriptions([subscription]);
+            await bot.sendTextMessage(`订阅[${subscription.title}]已删除！`);
+        } else {
+            await bot.sendTextMessage(`该订阅不存在！`);
+        }
+    }
+
+    async editSubscription(id: number, url: string) {
+        const subscription = db.getSubscription(id);
+        if (subscription !== null) {
+            try {
+                //获取订阅信息,
+                const channel = await this.parser.parseURL(url);
+                //检查数据库中是否已存在该订阅
+                if (db.existsSubscription(channel.link + '')) {
+                    await bot.sendTextMessage(`该订阅地址[${url}]已存在，无需修改！`);
+                    return;
+                }
+
+                subscription.title = channel.title + '';
+                subscription.description = channel.description + '';
+                subscription.link = channel.link + '';
+                db.updateSubscriptions([subscription]);
+                await bot.sendTextMessage(`订阅[${subscription.title}]已修改！`);
+            } catch (e) {
+                await bot.sendTextMessage(`修改订阅地址失败！`);
+            }
+        } else {
+            await bot.sendTextMessage(`新订阅不存在，无法修改！`);
         }
     }
 
