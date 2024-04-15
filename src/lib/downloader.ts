@@ -92,7 +92,8 @@ class Downloader {
         const params = self.regex.exec(content['body']);
         if (params !== null) {
             const url = params[1];
-            await self.obj.addUri(url);
+            const gid = await self.obj.addUri(url);
+            await bot.sendTextMessage(`已创建下载任务[${gid}]！`);
         }
     }
 
