@@ -28,6 +28,12 @@ class Bot {
             type: MsgType.Text,
             handler: this._default_event_handler
         });
+        this.addCommend({
+            obj: this,
+            regex: /^\?.*/,
+            type: MsgType.Text,
+            handler: this._help
+        });
     }
 
     /**
@@ -93,6 +99,16 @@ class Bot {
         const content = event.getContent();
         await bot.sendHtmlMessage("收到消息啦！:: ", content['body']);
         console.info("(%s) %s :: %s", room.name, sender, content.body);
+    }
+
+    async _help(event: sdk.MatrixEvent, room: sdk.Room, self: EventHandler) {
+        const sender = event.getSender();
+        const content = event.getContent();
+        let body = `查看所有指令：\n`;
+        for (let command of bot.commands) {
+            body += `${command.regex}\t${command.type}\n`;
+        }
+        await bot.sendTextMessage(body);
     }
 
     /**
