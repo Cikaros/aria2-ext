@@ -204,12 +204,13 @@ class Db {
                 link        = ?,
                 description = ?,
                 path        = ?,
-                "limit"     = ?
+                "limit"     = ?,
+                enable      = ?
             WHERE id = ?`;
         const update: Statement<Subscription> = this.database.prepare(sql);
         const updates = this.database.transaction(subs => {
             // @ts-ignore
-            for (const sub: Subscription of subs) update.run(sub.title, sub.link, sub.description, sub.path, sub.limit, sub.id);
+            for (const sub: Subscription of subs) update.run(sub.title, sub.link, sub.description, sub.path, sub.limit, sub.enable, sub.id);
             return subs.length;
         });
         return updates(subscriptions);
